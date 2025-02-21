@@ -14,7 +14,7 @@
         "autoprefixer": "^10.4.20",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
-        "m3ters-solid": "^1.0.1",
+        "m3ters-solid": "^1.0.8",
         "postcss": "^8.5.3",
         "solid-icons": "^1.1.0",
         "solid-js": "^1.9.4",
@@ -380,7 +380,7 @@
 
     "@tanstack/query-core": ["@tanstack/query-core@5.66.4", "", {}, "sha512-skM/gzNX4shPkqmdTCSoHtJAPMTtmIJNS0hE+xwTTUVYwezArCT34NMermABmBVUg5Ls5aiUXEDXfqwR1oVkcA=="],
 
-    "@tanstack/react-query": ["@tanstack/react-query@5.66.8", "", { "dependencies": { "@tanstack/query-core": "5.66.4" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-LqYHYArmM7ycyT1I/Txc/n6KzI8S/hBFw2SQ9Uj1GpbZ89AvZLEvetquiQEHkZ5rFEm+iVNpZ6zYjTiPmJ9N5Q=="],
+    "@tanstack/react-query": ["@tanstack/react-query@5.66.9", "", { "dependencies": { "@tanstack/query-core": "5.66.4" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-NRI02PHJsP5y2gAuWKP+awamTIBFBSKMnO6UVzi03GTclmHHHInH5UzVgzi5tpu4+FmGfsdT7Umqegobtsp23A=="],
 
     "@tanstack/solid-query": ["@tanstack/solid-query@5.66.4", "", { "dependencies": { "@tanstack/query-core": "5.66.4" }, "peerDependencies": { "solid-js": "^1.6.0" } }, "sha512-j+ZvYTvEeOaSU72VBQPGsGq6Qiy0cRvtZPretI13ZRxdAAhrKVw+y8l161USfgWOMGzJ4Dlq9ZVlYYhvdsX06A=="],
 
@@ -794,7 +794,7 @@
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
 
-    "m3ters-solid": ["m3ters-solid@1.0.1", "", { "peerDependencies": { "solid-js": "^1.9.4" } }, "sha512-RGs1bKIXJt5y6xdF6nrO7bVr+VMgARbqTWOxlKc43mo9Np0uaKb02i19jpIYCA8dSQciOEEMuvjXxp2SFygj8A=="],
+    "m3ters-solid": ["m3ters-solid@1.0.8", "", { "peerDependencies": { "solid-js": "^1.9.4" } }, "sha512-hMKuTbnSpgJKaLfOGT4Uni+VLVDtA6RvIAa0nYk+iTxs/P1lRBEfI6KHLq1NRUqwUKaJ9Akewuvo1KkA0dr80g=="],
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 

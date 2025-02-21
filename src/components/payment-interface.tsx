@@ -10,15 +10,21 @@ import { Button } from "~/components/ui/button";
 import { BiRegularWallet } from "solid-icons/bi";
 import { FiDollarSign, FiHash } from "solid-icons/fi";
 import { IoQrCodeSharp } from "solid-icons/io";
-import { createSignal, Switch, Match, Show } from "solid-js";
+import { createSignal, Switch, Match, Show, JSX } from "solid-js";
 import { M3terHead, m3terAlias } from "m3ters-solid";
+import { createStore } from "solid-js/store";
+import { Dynamic } from "solid-js/web";
+import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
+import { config } from "~/config";
+import abi from "~/ABIs/abi.json";
+import { parseEther } from "viem";
 
 interface FormState {
   tokenId: string;
   amount: number;
 }
 const Web3PaymentInterface = () => {
-  const [formState, setFormState] = createSignal<FormState>({
+  const [formState, setFormState] = createStore<FormState>({
     tokenId: "",
     amount: 0,
   });
@@ -27,28 +33,67 @@ const Web3PaymentInterface = () => {
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate Web3 transaction
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    setFormState({
-      tokenId: "",
-      amount: 0,
-    });
+    try {
+      setIsLoading(true);
+      const result = await writeContract(config, {
+        abi,
+        address: "0x2b3997D82C836bd33C89e20fBaEF96CA99F1B24A",
+        functionName: "pay",
+        value: parseEther(String(formState.amount)),
+        args: [BigInt(formState.tokenId)],
+      });
+
+      const reciept = await waitForTransactionReceipt(config, {
+        hash: result,
+      });
+      if (reciept.status === "reverted") {
+        throw Error("Transaction reverted");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      // setFormState({
+      //   tokenId: "",
+      //   amount: 0,
+      // });
+    }
   };
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log("Token ID:", formState().tokenId);
+
+  const handleChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+    const { value } = e.currentTarget;
+    setFormState("tokenId", value);
+  };
+
+  const handleInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+    const newValue = e.currentTarget.value;
+    if (/^\d*\.?\d*$/.test(newValue)) {
+      setFormState("amount", Number(newValue));
+    }
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (
+      !/[0-9.]/.test(e.key) &&
+      e.key !== "Backspace" &&
+      e.key !== "Delete" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight"
+    ) {
+      e.preventDefault();
+    }
   };
 
   return (
-    <div class="min-h-screen bg-gradient-to-br from-purple-900 via-gray-900 to-black flex items-center justify-center p-4">
-      <Card class="w-full max-w-md border border-purple-500/20 bg-gray-900/90 backdrop-blur-sm">
-        <CardHeader class="space-y-1 border-b border-purple-500/20">
+    <div
+      style={{
+        "background-image":
+          "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../src/assets/gnosis3.png')",
+      }}
+      class={`min-h-screen bg-contain bg-center bg-[#121212] bg-no-repeat flex items-center justify-center p-4`}
+    >
+      <Card class="w-full max-w-md border border-green-500/20 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10">
+        <CardHeader class="space-y-1 border-b border-green-500/20">
           <div class="flex items-center justify-between px-2">
             <div class="flex items-center gap-2">
               <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
@@ -76,29 +121,37 @@ const Web3PaymentInterface = () => {
                     type="text"
                     name="tokenId"
                     placeholder="Enter NFT token ID"
-                    value={formState().tokenId}
+                    value={formState.tokenId}
                     onInput={handleChange}
-                    class="h-11 bg-gray-800 border-purple-500/20 text-white placeholder:text-gray-500 pl-12"
+                    class="h-11 bg-gray-800 border-green-500/20 text-white placeholder:text-gray-500 pl-12"
                   />
                 </TextField>
                 <div class="absolute left-2 top-1/2 -translate-y-1/2">
                   <Switch>
-                    <Match when={formState().tokenId}>
-                      <div class="relative w-8 h-8 rounded-full overflow-hidden border border-purple-500/30">
-                        <M3terHead seed={formState().tokenId} size={32} />
+                    <Match when={formState.tokenId}>
+                      <div
+                        class={`relative w-8 h-8 rounded-full overflow-hidden ${
+                          !formState.tokenId && "border"
+                        } border-green-500/30`}
+                      >
+                        <Dynamic
+                          component={M3terHead}
+                          seed={formState.tokenId}
+                          size={32}
+                        />
                       </div>
                     </Match>
-                    <Match when={!formState().tokenId}>
-                      <div class="w-8 h-8 rounded-full bg-gray-700/50 border border-purple-500/30 flex items-center justify-center">
+                    <Match when={!formState.tokenId}>
+                      <div class="w-8 h-8 rounded-full bg-gray-700/50 border border-green-500/30 flex items-center justify-center">
                         <FiHash class="h-4 w-4 text-gray-500" />
                       </div>
                     </Match>
                   </Switch>
                 </div>
               </div>
-              <Show when={formState().tokenId}>
+              <Show when={formState.tokenId}>
                 <div class="text-xs text-gray-400 flex items-center gap-2 pl-12">
-                  {m3terAlias(formState().tokenId)}
+                  {m3terAlias(formState.tokenId)}
                 </div>
               </Show>
             </div>
@@ -111,13 +164,13 @@ const Web3PaymentInterface = () => {
                 <TextField>
                   <TextFieldInput
                     name="amount"
-                    type="number"
+                    type="text"
+                    inputMode={`decimal`}
                     placeholder="0.00"
-                    value={formState().amount}
-                    oninput={handleChange}
-                    class="h-11 bg-gray-800 border-purple-500/20 text-white placeholder:text-gray-500 pl-16"
-                    step="0.000001"
-                    min="0"
+                    value={formState.amount}
+                    onKeyDown={handleKeyDown}
+                    onInput={handleInput}
+                    class="h-11 bg-gray-800 border-green-500/20 text-white placeholder:text-gray-500 pl-16"
                   />
                 </TextField>
                 <span class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-mono">
@@ -138,9 +191,7 @@ const Web3PaymentInterface = () => {
             <Button
               type="submit"
               class="w-full h-11 bg-purple-600 hover:bg-purple-700 transition-all duration-200"
-              disabled={
-                isLoading() || !formState().tokenId || !formState().amount
-              }
+              disabled={isLoading() || !formState.tokenId || !formState.amount}
             >
               {isLoading() ? (
                 <div class="flex items-center gap-2">
