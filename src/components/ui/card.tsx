@@ -1,65 +1,68 @@
-import type { Component, ComponentProps } from "solid-js";
-import { splitProps } from "solid-js";
+import * as React from "react"
 
-import { cn } from "~/lib/utils";
+import { cn } from "@/lib/utils"
 
-const Card: Component<ComponentProps<"div">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
+function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      class={cn(
-        "rounded-lg border bg-card text-card-foreground shadow-sm",
-        local.class
+      data-slot="card"
+      className={cn(
+        "bg-card text-card-foreground rounded-xl border shadow-sm",
+        className
       )}
-      {...others}
+      {...props}
     />
-  );
-};
+  )
+}
 
-const CardHeader: Component<ComponentProps<"div">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
+function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div class={cn("flex flex-col space-y-1.5 p-6", local.class)} {...others} />
-  );
-};
-
-const CardTitle: Component<ComponentProps<"h3">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-  return (
-    <h3
-      class={cn(
-        "text-lg font-semibold leading-none tracking-tight",
-        local.class
-      )}
-      {...others}
+    <div
+      data-slot="card-header"
+      className={cn("flex flex-col gap-1.5 p-6", className)}
+      {...props}
     />
-  );
-};
+  )
+}
 
-const CardDescription: Component<ComponentProps<"p">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
+function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <p class={cn("text-sm text-muted-foreground", local.class)} {...others} />
-  );
-};
+    <div
+      data-slot="card-title"
+      className={cn("leading-none font-semibold tracking-tight", className)}
+      {...props}
+    />
+  )
+}
 
-const CardContent: Component<ComponentProps<"div">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-  return <div class={cn("p-6 pt-0", local.class)} {...others} />;
-};
-
-const CardFooter: Component<ComponentProps<"div">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
+function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div class={cn("flex items-center p-6 pt-0", local.class)} {...others} />
-  );
-};
+    <div
+      data-slot="card-description"
+      className={cn("text-muted-foreground text-sm", className)}
+      {...props}
+    />
+  )
+}
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-};
+function CardContent({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-content"
+      className={cn("p-6 pt-0", className)}
+      {...props}
+    />
+  )
+}
+
+function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="card-footer"
+      className={cn("flex items-center p-6 pt-0", className)}
+      {...props}
+    />
+  )
+}
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
