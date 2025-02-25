@@ -20,6 +20,8 @@ import {
   useReadContract,
 } from "wagmi";
 
+import BuiltOnETH from "@/assets/built-on-ethereum2.png";
+
 const Web3PaymentInterface = () => {
   const [tokenId, setTokenId] = useState("");
   const [amount, setAmount] = useState("");
@@ -184,8 +186,7 @@ const Web3PaymentInterface = () => {
         </CardContent>
         <CardFooter className="justify-center text-xs text-gray-500 flex flex-col gap-1">
           <div className="flex items-center gap-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            Secured by Gnosis Chain
+            <img src={BuiltOnETH} className={`h-[50px] w-[160px]`} />
           </div>
         </CardFooter>
       </Card>
