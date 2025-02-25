@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Wallet, Send} from "lucide-react";
+import { Send } from "lucide-react";
 import { parseEther, formatUnits } from "viem";
 import { Skeleton } from "./ui/skeleton";
 import { contractConfig } from "@/config";
