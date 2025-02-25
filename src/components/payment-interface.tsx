@@ -20,6 +20,8 @@ import {
   useReadContract,
 } from "wagmi";
 
+import BuiltOnETH from "@/assets/built-on-ethereum2.png";
+
 const Web3PaymentInterface = () => {
   const [tokenId, setTokenId] = useState("");
   const [amount, setAmount] = useState("");
@@ -82,8 +84,12 @@ const Web3PaymentInterface = () => {
       <Card className="w-full max-w-md border border-green-500/20 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10">
         <CardHeader className="space-y-1 border-b border-green-500/20">
           <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2 text-white">
-            <DollarSign className="h-6 w-6 text-purple-400" />
-            Pay with xDAI
+            <img
+              src="https://docs.gnosischain.com/img/tokens/xdai.png"
+              alt="xDAI logo"
+              className={`w-[25px] h-[25px]`}
+            />
+            - Charge
           </CardTitle>
         </CardHeader>
         <CardContent className="mt-4">
@@ -105,17 +111,13 @@ const Web3PaymentInterface = () => {
               )}
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <Hash className="h-4 w-4 text-purple-400" />
-                M3ter ID
-              </label>
               <div className="relative">
                 <Input
                   type="text"
                   name="tokenId"
                   inputMode={`numeric`}
                   onKeyDown={handleKeyDown}
-                  placeholder="Enter M3ter ID"
+                  placeholder="M3ter ID"
                   value={tokenId}
                   onChange={(e) => setTokenId(e.target.value)}
                   className="h-[50px] bg-gray-800 border-green-500/20 text-[17px] placeholder:text-[15px] text-white placeholder:text-gray-500 pl-[60px]"
@@ -128,16 +130,12 @@ const Web3PaymentInterface = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-purple-400" />
-                Amount (xDAI)
-              </label>
               <div className="relative">
                 <Input
                   name="amount"
                   type="text"
                   inputMode={`decimal`}
-                  placeholder="0.00"
+                  placeholder="Amount"
                   value={amount}
                   onKeyDown={handleKeyDown}
                   onChange={(e) => setAmount(e.target.value)}
@@ -163,7 +161,7 @@ const Web3PaymentInterface = () => {
                         Number(formatUnits(BigInt(tarrif as string), 18))) *
                         100
                     ) / 100}{" "}
-                  kWh
+                  kWh⚡
                 </span>
               </div>
             </div>
@@ -188,8 +186,7 @@ const Web3PaymentInterface = () => {
         </CardContent>
         <CardFooter className="justify-center text-xs text-gray-500 flex flex-col gap-1">
           <div className="flex items-center gap-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            Secured by Gnosis Chain
+            <img src={BuiltOnETH} className={`h-[50px] w-[160px]`} />
           </div>
         </CardFooter>
       </Card>
