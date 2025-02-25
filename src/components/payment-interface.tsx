@@ -9,41 +9,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Wallet, DollarSign, Hash } from "lucide-react";
-import { writeContract, waitForTransactionReceipt } from "@wagmi/core";
-import { config } from "@/config";
-import abi from "@/ABIs/abi.json";
-import { parseEther } from "viem";
+import { parseEther, formatUnits } from "viem";
 import { Skeleton } from "./ui/skeleton";
+import { contractConfig } from "@/config";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
-import { useEstimateGas } from "wagmi";
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useReadContract,
+} from "wagmi";
 
 const Web3PaymentInterface = () => {
   const [tokenId, setTokenId] = useState("");
   const [amount, setAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const gas = useEstimateGas({
-    to: "0x2b3997D82C836bd33C89e20fBaEF96CA99F1B24A",
-    value: parseEther(amount),
+  const { data: hash, writeContract } = useWriteContract();
+
+  const { data: tarrif } = useReadContract({
+    ...contractConfig,
+    functionName: "tariffOf",
+    args: [BigInt(tokenId)],
   });
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const result = await writeContract(config, {
-        abi,
-        address: "0x2b3997D82C836bd33C89e20fBaEF96CA99F1B24A",
+      writeContract({
+        ...contractConfig,
         functionName: "pay",
         value: parseEther(amount),
         args: [BigInt(tokenId)],
       });
-
-      const reciept = await waitForTransactionReceipt(config, {
-        hash: result,
-      });
-      if (reciept.status === "reverted") {
-        throw Error("Transaction reverted");
-      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -54,6 +52,7 @@ const Web3PaymentInterface = () => {
       // });
     }
   };
+
   const handleKeyDown = (e: any) => {
     if (
       !/[0-9.]/.test(e.key) &&
@@ -66,6 +65,12 @@ const Web3PaymentInterface = () => {
     }
   };
 
+  const { isLoading: _isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+
+  console.log("isSuccess: ", isConfirmed);
   return (
     <div
       style={{
@@ -102,20 +107,22 @@ const Web3PaymentInterface = () => {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                 <Hash className="h-4 w-4 text-purple-400" />
-                NFT Token ID
+                M3ter ID
               </label>
               <div className="relative">
                 <Input
                   type="text"
                   name="tokenId"
-                  placeholder="Enter NFT token ID"
+                  inputMode={`numeric`}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Enter M3ter ID"
                   value={tokenId}
                   onChange={(e) => setTokenId(e.target.value)}
                   className="h-[50px] bg-gray-800 border-green-500/20 text-[17px] placeholder:text-[15px] text-white placeholder:text-gray-500 pl-[60px]"
                 />
                 <div className="absolute left-2 top-1/2 -translate-y-1/2">
                   <div className="w-8 h-8 rounded-full bg-gray-700/50 border border-green-500/30 flex items-center justify-center">
-                    <Hash className="h-4 w-4 text-gray-500" />
+                    🆔
                   </div>
                 </div>
               </div>
@@ -147,8 +154,17 @@ const Web3PaymentInterface = () => {
             </div>
             <div className="rounded-lg bg-green-500/10 p-3 border border-green-500/20">
               <div className="text-xs text-gray-400 flex items-center justify-between">
-                <span>Network Fee</span>
-                <span className="font-mono">~{gas.data && gas.data} xDAI</span>
+                <span>You get</span>
+                <span className="font-mono">
+                  {(tarrif as string) &&
+                    amount &&
+                    Math.floor(
+                      (Number(amount) /
+                        Number(formatUnits(BigInt(tarrif as string), 18))) *
+                        100
+                    ) / 100}{" "}
+                  kWh
+                </span>
               </div>
             </div>
             <Button

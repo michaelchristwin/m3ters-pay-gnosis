@@ -5,6 +5,7 @@ import { WagmiProvider } from "wagmi";
 import Navbar from "@/components/Navbar";
 import { config } from "@/config";
 import { ConnectKitProvider } from "connectkit";
+import Footer from "@/components/Footer";
 
 const queryClient = new QueryClient();
 export const Route = createRootRoute({
@@ -16,6 +17,7 @@ export const Route = createRootRoute({
             <div className={`w-[100vw] h-[100vh]`}>
               <Navbar />
               <Outlet />
+              <Footer />
             </div>
           </ConnectKitProvider>
         </QueryClientProvider>
