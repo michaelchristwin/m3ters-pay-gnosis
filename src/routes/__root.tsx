@@ -21,7 +21,7 @@ export const Route = createRootRoute({
         </QueryClientProvider>
       </WagmiProvider>
 
-      <TanStackRouterDevtools />
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
     </>
   ),
 });
