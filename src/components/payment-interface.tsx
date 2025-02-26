@@ -2,25 +2,25 @@ import { useState, FormEvent, useEffect } from "react";
 import { Route } from "@/routes";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
-  CardFooter,
+  // CardFooter, // Removed CardFooter usage
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { SendHorizontal } from "lucide-react";
+import { SendHorizontal, Wallet } from "lucide-react";
 import { parseEther, formatUnits } from "viem";
 import { contractConfig } from "@/config";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
+// Commented out BuiltOnETH import
+// import BuiltOnETH from "@/assets/built-on-ethereum2.png";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
   useReadContract,
+  useAccount,
 } from "wagmi";
-import BuiltOnETH from "@/assets/built-on-ethereum2.png";
+import { ConnectKitButton } from "connectkit";
 
 const Web3PaymentInterface = () => {
   const searchParams = Route.useSearch();
@@ -30,6 +30,7 @@ const Web3PaymentInterface = () => {
     id: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { isConnected } = useAccount();
   const { data: hash, writeContract } = useWriteContract();
 
   const { data: tarrif } = useReadContract({
@@ -70,6 +71,7 @@ const Web3PaymentInterface = () => {
       e.preventDefault();
     }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
@@ -77,6 +79,7 @@ const Web3PaymentInterface = () => {
       [name]: value,
     }));
   };
+
   const { isLoading: _isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
@@ -86,7 +89,6 @@ const Web3PaymentInterface = () => {
 
   useEffect(() => {
     const { id, amount } = searchParams;
-    // Only update if parameters exist
     if (id || amount) {
       setFormState({
         id: id || "",
@@ -94,41 +96,38 @@ const Web3PaymentInterface = () => {
       });
     }
   }, [searchParams]);
+
+  // Helper function to capitalize each word's first letter
+  const capitalizeWords = (str: string) => {
+    if (!str) return "";
+    return str
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   return (
     <div
       style={{
         backgroundImage:
           "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../src/assets/gnosis3.png')",
       }}
-      className={`min-h-screen bg-contain bg-center bg-[#121212] bg-no-repeat flex items-center justify-center p-4`}
+      className="min-h-screen bg-contain bg-center bg-[#121212] bg-no-repeat flex items-center justify-center p-4"
     >
       <Card className="w-full max-w-md border border-green-500/20 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10">
-        <CardHeader className="space-y-1 border-b border-green-500/20">
-          <CardTitle className="text-2xl font-bold text-center flex items-center justify-center text-white">
-            <img
-              src="https://docs.gnosischain.com/img/tokens/xdai.png"
-              alt="xDAI logo"
-              className={`w-[25px] h-[25px]`}
-            />
-            Charge
-          </CardTitle>
-        </CardHeader>
+        {/* Removed CardHeader with page title */}
         <CardContent className="mt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className={`w-full flex flex-col h-fit items-center`}>
+            <div className="w-full flex flex-col h-fit items-center">
               {formState.id ? (
                 <>
                   <M3terHead seed={formState.id} size={100} />
                   <p className="text-[13px] font-bold text-green-400 gap-2">
-                    {m3terAlias(formState.id)}
+                    {capitalizeWords(m3terAlias(formState.id))}
                   </p>
                 </>
               ) : (
-                <>
-                  <Skeleton
-                    className={`bg-gray-900 w-[100px] h-[100px] rounded-[10px]`}
-                  />
-                </>
+                <Skeleton className="bg-gray-900 w-[100px] h-[100px] rounded-[10px]" />
               )}
             </div>
             <div className="space-y-2">
@@ -153,7 +152,7 @@ const Web3PaymentInterface = () => {
                 <Input
                   name="amount"
                   type="text"
-                  inputMode={`decimal`}
+                  inputMode="decimal"
                   placeholder="Amount"
                   value={formState.amount}
                   onKeyDown={handleKeyDown}
@@ -164,7 +163,7 @@ const Web3PaymentInterface = () => {
                   <img
                     src="https://docs.gnosischain.com/img/tokens/xdai.png"
                     alt="xDAI logo"
-                    className={`w-[25px] h-[25px]`}
+                    className="w-[25px] h-[25px]"
                   />
                 </span>
               </div>
@@ -185,30 +184,49 @@ const Web3PaymentInterface = () => {
                 </span>
               </div>
             </div>
-            <Button
-              type="submit"
-              className="w-full h-11 bg-green-600 hover:bg-green-700 transition-all duration-200"
-              disabled={isLoading || !formState.id || !formState.amount}
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  Confirming Transaction...
-                </div>
+            <div>
+              {/* Single button: shows "Connect" if not connected, and "Pay" if connected */}
+              {!isConnected ? (
+                <ConnectKitButton.Custom>
+                  {({ show }) => (
+                    <button
+                      onClick={show}
+                      className="inline-flex items-center gap-2 px-4 h-11 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 rounded-md w-full"
+                    >
+                      Connect <Wallet className="h-4 w-4" />
+                    </button>
+                  )}
+                </ConnectKitButton.Custom>
               ) : (
-                <div className="flex items-center gap-2">
-                  Pay
-                  <SendHorizontal className="h-4 w-4" />
-                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-11 bg-green-600 hover:bg-green-700 transition-all duration-200"
+                  disabled={isLoading || !formState.id || !formState.amount}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                      Confirming Transaction...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      Pay
+                      <SendHorizontal className="h-4 w-4" />
+                    </div>
+                  )}
+                </Button>
               )}
-            </Button>
+            </div>
           </form>
         </CardContent>
+        {/* Commented out CardFooter using BuiltOnETH */}
+        {/*
         <CardFooter className="justify-center text-xs text-gray-500 flex flex-col gap-1">
           <div className="flex items-center gap-1">
-            <img src={BuiltOnETH} className={`h-[50px] w-[160px]`} />
+            <img src={BuiltOnETH} className="h-[50px] w-[160px]" />
           </div>
         </CardFooter>
+        */}
       </Card>
     </div>
   );
