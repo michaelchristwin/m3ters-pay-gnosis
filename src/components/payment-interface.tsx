@@ -22,8 +22,6 @@ import {
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
 
-
-
 const Web3PaymentInterface = () => {
   const searchParams = Route.useSearch();
 
