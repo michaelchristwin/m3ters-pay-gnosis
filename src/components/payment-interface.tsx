@@ -83,13 +83,12 @@ const Web3PaymentInterface = () => {
     >
       <Card className="w-full max-w-md border border-green-500/20 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10">
         <CardHeader className="space-y-1 border-b border-green-500/20">
-          <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2 text-white">
+          <CardTitle className="text-2xl font-bold text-center flex items-center justify-center text-white">
             <img
               src="https://docs.gnosischain.com/img/tokens/xdai.png"
               alt="xDAI logo"
               className={`w-[25px] h-[25px]`}
-            />
-            - Charge
+            />Charge
           </CardTitle>
         </CardHeader>
         <CardContent className="mt-4">
@@ -123,9 +122,7 @@ const Web3PaymentInterface = () => {
                   className="h-[50px] bg-gray-800 border-green-500/20 text-[17px] placeholder:text-[15px] text-white placeholder:text-gray-500 pl-[60px]"
                 />
                 <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                  <div className="w-8 h-8 rounded-full bg-gray-700/50 border border-green-500/30 flex items-center justify-center">
-                    🆔
-                  </div>
+                  🆔
                 </div>
               </div>
             </div>
@@ -152,7 +149,7 @@ const Web3PaymentInterface = () => {
             </div>
             <div className="rounded-lg bg-green-500/10 p-3 border border-green-500/20">
               <div className="text-xs text-gray-400 flex items-center justify-between">
-                <span>You get</span>
+                <span>Gets you:</span>
                 <span className="font-mono">
                   {(tarrif as string) &&
                     amount &&
@@ -162,7 +159,7 @@ const Web3PaymentInterface = () => {
                           Number(formatUnits(BigInt(tarrif as string), 18))) *
                           100
                       ) / 100
-                    }  kWh⚡`}
+                    } kWh⚡`}
                 </span>
               </div>
             </div>
