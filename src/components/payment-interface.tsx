@@ -192,7 +192,7 @@ const Web3PaymentInterface = () => {
                   {({ show }) => (
                     <button
                       onClick={show}
-                      className="inline-flex items-center gap-2 px-4 h-11 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 rounded-md w-full"
+                      className="inline-flex items-center justify-center gap-2 px-4 h-11 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 rounded-md w-full"
                     >
                       Connect <Wallet className="h-4 w-4" />
                     </button>
