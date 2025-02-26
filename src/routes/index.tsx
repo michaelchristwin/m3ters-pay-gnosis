@@ -2,9 +2,19 @@ import "@/App.css";
 import Web3PaymentInterface from "@/components/payment-interface";
 import { createFileRoute } from "@tanstack/react-router";
 
+export interface HomeSearchParams {
+  id?: string;
+  amount?: string;
+}
 //@ts-ignore
 export const Route = createFileRoute("/")({
   component: Index,
+  validateSearch: (search: Record<string, unknown>): HomeSearchParams => {
+    return {
+      id: search.id as string | undefined,
+      amount: search.amount as string | undefined,
+    };
+  },
 });
 
 function Index() {

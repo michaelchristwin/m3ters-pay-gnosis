@@ -1,4 +1,5 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
+import { Route } from "@/routes";
 import {
   Card,
   CardHeader,
@@ -23,15 +24,19 @@ import {
 import BuiltOnETH from "@/assets/built-on-ethereum2.png";
 
 const Web3PaymentInterface = () => {
-  const [tokenId, setTokenId] = useState("");
-  const [amount, setAmount] = useState("");
+  const searchParams = Route.useSearch();
+
+  const [formState, setFormState] = useState({
+    amount: "",
+    id: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const { data: hash, writeContract } = useWriteContract();
 
   const { data: tarrif } = useReadContract({
     ...contractConfig,
     functionName: "tariffOf",
-    args: [BigInt(tokenId)],
+    args: [BigInt(formState.id)],
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -41,8 +46,8 @@ const Web3PaymentInterface = () => {
       writeContract({
         ...contractConfig,
         functionName: "pay",
-        value: parseEther(amount),
-        args: [BigInt(tokenId)],
+        value: parseEther(formState.amount),
+        args: [BigInt(formState.id)],
       });
     } catch (error) {
       console.error(error);
@@ -66,13 +71,30 @@ const Web3PaymentInterface = () => {
       e.preventDefault();
     }
   };
-
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
   const { isLoading: _isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({
       hash,
     });
 
   console.log("isSuccess: ", isConfirmed);
+
+  useEffect(() => {
+    const { id, amount } = searchParams;
+    // Only update if parameters exist
+    if (id || amount) {
+      setFormState({
+        id: id || "",
+        amount: amount || "",
+      });
+    }
+  }, [searchParams]);
   return (
     <div
       style={{
@@ -88,17 +110,18 @@ const Web3PaymentInterface = () => {
               src="https://docs.gnosischain.com/img/tokens/xdai.png"
               alt="xDAI logo"
               className={`w-[25px] h-[25px]`}
-            />Charge
+            />
+            Charge
           </CardTitle>
         </CardHeader>
         <CardContent className="mt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className={`w-full flex flex-col h-fit items-center`}>
-              {tokenId ? (
+              {formState.id ? (
                 <>
-                  <M3terHead seed={tokenId} size={100} />
+                  <M3terHead seed={formState.id} size={100} />
                   <p className="text-[13px] font-bold text-green-400 gap-2">
-                    {m3terAlias(tokenId)}
+                    {m3terAlias(formState.id)}
                   </p>
                 </>
               ) : (
@@ -117,8 +140,8 @@ const Web3PaymentInterface = () => {
                   inputMode={`numeric`}
                   onKeyDown={handleKeyDown}
                   placeholder="M3ter ID"
-                  value={tokenId}
-                  onChange={(e) => setTokenId(e.target.value)}
+                  value={formState.id}
+                  onChange={handleChange}
                   className="h-[50px] bg-gray-800 border-green-500/20 text-[17px] placeholder:text-[15px] text-white placeholder:text-gray-500 pl-[60px]"
                 />
                 <div className="absolute left-2 top-1/2 -translate-y-1/2">
@@ -133,9 +156,9 @@ const Web3PaymentInterface = () => {
                   type="text"
                   inputMode={`decimal`}
                   placeholder="Amount"
-                  value={amount}
+                  value={formState.amount}
                   onKeyDown={handleKeyDown}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={handleChange}
                   className="h-[50px] bg-gray-800 border-green-500/20 text-white placeholder:text-gray-500 pl-16 focus:outline-none"
                 />
                 <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 font-mono">
@@ -152,10 +175,10 @@ const Web3PaymentInterface = () => {
                 <span>Gets you:</span>
                 <span className="font-mono">
                   {(tarrif as string) &&
-                    amount &&
+                    formState.amount &&
                     `${
                       Math.floor(
-                        (Number(amount) /
+                        (Number(formState.amount) /
                           Number(formatUnits(BigInt(tarrif as string), 18))) *
                           100
                       ) / 100
@@ -166,7 +189,7 @@ const Web3PaymentInterface = () => {
             <Button
               type="submit"
               className="w-full h-11 bg-green-600 hover:bg-green-700 transition-all duration-200"
-              disabled={isLoading || !tokenId || !amount}
+              disabled={isLoading || !formState.id || !formState.amount}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
