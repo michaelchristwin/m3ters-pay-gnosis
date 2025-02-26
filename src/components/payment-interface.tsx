@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 import { parseEther, formatUnits } from "viem";
 import { Skeleton } from "./ui/skeleton";
 import { contractConfig } from "@/config";
@@ -176,7 +176,7 @@ const Web3PaymentInterface = () => {
               ) : (
                 <div className="flex items-center gap-2">
                   Pay
-                  <Send className="h-4 w-4" />
+                  <SendHorizontal className="h-4 w-4" />
                 </div>
               )}
             </Button>
