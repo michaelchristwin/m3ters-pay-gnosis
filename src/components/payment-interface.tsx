@@ -21,6 +21,7 @@ import {
   useAccount,
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Web3PaymentInterface = () => {
   const searchParams = Route.useSearch();
