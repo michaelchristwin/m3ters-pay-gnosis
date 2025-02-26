@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SendHorizontal } from "lucide-react";
 import { parseEther, formatUnits } from "viem";
-import { Skeleton } from "./ui/skeleton";
 import { contractConfig } from "@/config";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
@@ -20,7 +20,6 @@ import {
   useWaitForTransactionReceipt,
   useReadContract,
 } from "wagmi";
-
 import BuiltOnETH from "@/assets/built-on-ethereum2.png";
 
 const Web3PaymentInterface = () => {
@@ -136,7 +135,7 @@ const Web3PaymentInterface = () => {
               <div className="relative">
                 <Input
                   type="text"
-                  name="tokenId"
+                  name="id"
                   inputMode={`numeric`}
                   onKeyDown={handleKeyDown}
                   placeholder="M3ter ID"
