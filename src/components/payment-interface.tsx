@@ -156,12 +156,13 @@ const Web3PaymentInterface = () => {
                 <span className="font-mono">
                   {(tarrif as string) &&
                     amount &&
-                    Math.floor(
-                      (Number(amount) /
-                        Number(formatUnits(BigInt(tarrif as string), 18))) *
-                        100
-                    ) / 100}{" "}
-                  kWh⚡
+                    `${
+                      Math.floor(
+                        (Number(amount) /
+                          Number(formatUnits(BigInt(tarrif as string), 18))) *
+                          100
+                      ) / 100
+                    }  kWh⚡`}
                 </span>
               </div>
             </div>
