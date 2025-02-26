@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal, Wallet } from "lucide-react";
 import { parseEther, formatUnits } from "viem";
-import { Skeleton } from "./ui/skeleton";
 import { contractConfig } from "@/config";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
@@ -22,6 +21,8 @@ import {
   useAccount,
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
+
+
 
 const Web3PaymentInterface = () => {
   const searchParams = Route.useSearch();
@@ -135,7 +136,7 @@ const Web3PaymentInterface = () => {
               <div className="relative">
                 <Input
                   type="text"
-                  name="tokenId"
+                  name="id"
                   inputMode={`numeric`}
                   onKeyDown={handleKeyDown}
                   placeholder="M3ter ID"
