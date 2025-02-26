@@ -88,7 +88,7 @@ const Web3PaymentInterface = () => {
               src="https://docs.gnosischain.com/img/tokens/xdai.png"
               alt="xDAI logo"
               className={`w-[25px] h-[25px]`}
-            />Charge
+            />-Charge
           </CardTitle>
         </CardHeader>
         <CardContent className="mt-4">
