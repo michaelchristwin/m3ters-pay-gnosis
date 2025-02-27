@@ -1,10 +1,6 @@
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useCallback, useMemo } from "react";
 import { Route } from "@/routes";
-import {
-  Card,
-  CardContent,
-  // CardFooter, // Removed CardFooter usage
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal, Wallet } from "lucide-react";
@@ -12,8 +8,6 @@ import { parseEther, formatUnits } from "viem";
 import { contractConfig } from "@/config";
 //@ts-ignore
 import { M3terHead, m3terAlias } from "m3ters";
-// Commented out BuiltOnETH import
-// import BuiltOnETH from "@/assets/built-on-ethereum2.png";
 import {
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -22,6 +16,7 @@ import {
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
 import { Skeleton } from "@/components/ui/skeleton";
+import { interact_evm } from "@/lib/utils";
 
 const Web3PaymentInterface = () => {
   const searchParams = Route.useSearch();
@@ -30,36 +25,45 @@ const Web3PaymentInterface = () => {
     amount: "",
     id: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+
   const { isConnected } = useAccount();
   const { data: hash, writeContract } = useWriteContract();
 
-  const { data: tarrif } = useReadContract({
-    ...contractConfig,
-    functionName: "tariffOf",
-    args: [BigInt(formState.id)],
-  });
+  const { data: tarrif } = useMemo(() => {
+    return useReadContract({
+      ...contractConfig,
+      functionName: "tariffOf",
+      args: [BigInt(formState.id)],
+    });
+  }, [formState.id]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      writeContract({
-        ...contractConfig,
-        functionName: "pay",
-        value: parseEther(formState.amount),
-        args: [BigInt(formState.id)],
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-      // setFormState({
-      //   tokenId: "",
-      //   amount: 0,
-      // });
-    }
-  };
+  const { data: contractId } = useMemo(() => {
+    return useReadContract({
+      ...contractConfig,
+      functionName: "contractByToken",
+      args: [BigInt(formState.id)],
+    });
+  }, [formState.id]);
+
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      writeContract(
+        {
+          ...contractConfig,
+          functionName: "pay",
+          value: parseEther(formState.amount),
+          args: [BigInt(formState.id)],
+        },
+        {
+          onSuccess: (hash) => {
+            interact_evm(contractId as string, "topup", hash);
+          },
+        }
+      );
+    },
+    [writeContract]
+  );
 
   const handleKeyDown = (e: any) => {
     if (
@@ -81,10 +85,9 @@ const Web3PaymentInterface = () => {
     }));
   };
 
-  const { isLoading: _isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+  const { isLoading, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   console.log("isSuccess: ", isConfirmed);
 

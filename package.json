@@ -20,13 +20,16 @@
     "clsx": "^2.1.1",
     "connectkit": "^1.8.2",
     "lucide-react": "^0.475.0",
+    "m3tering-ed25519": "^1.0.2",
+    "m3tering-ethers": "^1.0.2",
     "m3ters": "^1.0.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "^4.0.7",
     "tailwindcss-animate": "^1.0.7",
-    "wagmi": "^2.14.11"
+    "wagmi": "^2.14.11",
+    "warp-contracts": "^1.4.45"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
