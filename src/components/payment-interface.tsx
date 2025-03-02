@@ -62,7 +62,7 @@ const Web3PaymentInterface = () => {
         }
       );
     },
-    [writeContract]
+    [writeContract, formState.amount, formState.id]
   );
 
   const handleKeyDown = (e: any) => {

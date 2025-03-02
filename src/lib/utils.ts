@@ -12,7 +12,6 @@ const warp = WarpFactory.forMainnet()
   .use(new Ed25519Extension())
   .use(new EthersExtension());
 
-const wallet = await warp.arweave.wallets.generate();
 const tags = [
   { name: "Contract-Label", value: "M3ters" },
   { name: "Contract-Use", value: "M3tering Protocol" },
@@ -23,6 +22,7 @@ export async function interact_evm(
   func: string,
   txHash: string
 ) {
+  const wallet = await warp.arweave.wallets.generate();
   const contract = warp.contract(contractId).connect(wallet);
   const interactionResult = await contract.writeInteraction(
     {
