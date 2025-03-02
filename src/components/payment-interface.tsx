@@ -29,13 +29,11 @@ const Web3PaymentInterface = () => {
   const { isConnected } = useAccount();
   const { data: hash, writeContract } = useWriteContract();
 
-  const { data: tarrif } = useMemo(() => {
-    return useReadContract({
-      ...contractConfig,
-      functionName: "tariffOf",
-      args: [BigInt(formState.id)],
-    });
-  }, [formState.id]);
+  const { data: tarrif } = useReadContract({
+    ...contractConfig,
+    functionName: "tariffOf",
+    args: [BigInt(formState.id)],
+  });
 
   const { data: contractId } = useMemo(() => {
     return useReadContract({
