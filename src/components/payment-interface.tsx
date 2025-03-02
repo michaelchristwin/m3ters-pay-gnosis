@@ -35,13 +35,12 @@ const Web3PaymentInterface = () => {
     args: [BigInt(formState.id)],
   });
 
-  const { data: contractId } = useMemo(() => {
-    return useReadContract({
+  const { data: contractId } = useReadContract({
       ...contractConfig,
       functionName: "contractByToken",
       args: [BigInt(formState.id)],
     });
-  }, [formState.id]);
+  
 
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
