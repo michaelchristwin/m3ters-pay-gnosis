@@ -36,11 +36,10 @@ const Web3PaymentInterface = () => {
   });
 
   const { data: contractId } = useReadContract({
-      ...contractConfig,
-      functionName: "contractByToken",
-      args: [BigInt(formState.id)],
-    });
-  
+    ...contractConfig,
+    functionName: "contractByToken",
+    args: [BigInt(formState.id)],
+  });
 
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -82,11 +81,9 @@ const Web3PaymentInterface = () => {
     }));
   };
 
-  const { isLoading, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  const { isLoading } = useWaitForTransactionReceipt({
     hash,
   });
-
-  console.log("isSuccess: ", isConfirmed);
 
   useEffect(() => {
     const { id, amount } = searchParams;
@@ -110,12 +107,11 @@ const Web3PaymentInterface = () => {
   return (
     <div
       style={{
-        backgroundImage:
-          "linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../src/assets/gnosis3.png')",
+        background: `radial-gradient(ellipse at 20% 80%, #002d00 0%, #0a3d0a 25%, #1a4d1a 50%, #0d3f0d 75%, #000000 100%)`,
       }}
       className="min-h-screen bg-contain bg-center bg-[#121212] bg-no-repeat flex items-center justify-center p-4"
     >
-      <Card className="w-full max-w-md border border-green-500/20 bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10">
+      <Card className="w-full max-w-md border-0  bg-gray-400/10 bg-clip-padding backdrop-filter backdrop-blur-lg">
         {/* Removed CardHeader with page title */}
         <CardContent className="mt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -128,7 +124,7 @@ const Web3PaymentInterface = () => {
                   </p>
                 </>
               ) : (
-                <Skeleton className="bg-gray-900 w-[100px] h-[100px] rounded-[10px]" />
+                <Skeleton className="w-[100px] h-[100px] rounded-[10px]" />
               )}
             </div>
             <div className="space-y-2">
@@ -192,7 +188,7 @@ const Web3PaymentInterface = () => {
                   {({ show }) => (
                     <button
                       onClick={show}
-                      className="inline-flex items-center justify-center gap-2 px-4 h-11 bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 rounded-md w-full"
+                      className="inline-flex items-center justify-center gap-2 px-4 h-11 bg-green-600 hover:bg-green-700 text-white transition-all duration-200 rounded-md w-full"
                     >
                       Connect <Wallet className="h-4 w-4" />
                     </button>

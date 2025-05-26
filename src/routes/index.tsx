@@ -1,4 +1,4 @@
-import "@/App.css";
+import "@/index.css";
 import Web3PaymentInterface from "@/components/payment-interface";
 import { createFileRoute } from "@tanstack/react-router";
 
