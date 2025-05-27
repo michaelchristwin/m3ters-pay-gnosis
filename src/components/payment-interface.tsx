@@ -14,7 +14,7 @@ import {
   useReadContract,
   useAccount,
 } from "wagmi";
-import { ConnectKitButton } from "connectkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Skeleton } from "@/components/ui/skeleton";
 import { interact_evm } from "@/lib/utils";
 
@@ -184,16 +184,16 @@ const Web3PaymentInterface = () => {
             <div>
               {/* Single button: shows "Connect" if not connected, and "Pay" if connected */}
               {!isConnected ? (
-                <ConnectKitButton.Custom>
-                  {({ show }) => (
+                <ConnectButton.Custom>
+                  {({ openConnectModal }) => (
                     <button
-                      onClick={show}
-                      className="inline-flex items-center justify-center gap-2 px-4 h-11 bg-green-600 hover:bg-green-700 text-white transition-all duration-200 rounded-md w-full"
+                      onClick={openConnectModal}
+                      className="inline-flex items-center dynapuff justify-center gap-2 px-4 h-11 bg-green-600 hover:bg-green-700 text-white transition-all duration-200 rounded-md w-full"
                     >
                       Connect <Wallet className="h-4 w-4" />
                     </button>
                   )}
-                </ConnectKitButton.Custom>
+                </ConnectButton.Custom>
               ) : (
                 <Button
                   type="submit"
