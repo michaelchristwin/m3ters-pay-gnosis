@@ -124,7 +124,7 @@ const Web3PaymentInterface = () => {
                   </p>
                 </>
               ) : (
-                <Skeleton className="w-[100px] h-[100px] rounded-[10px]" />
+                <Skeleton className="w-[118px] h-[118px] rounded-[10px]" />
               )}
             </div>
             <div className="space-y-2">
