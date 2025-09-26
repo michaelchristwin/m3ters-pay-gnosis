@@ -32,7 +32,6 @@
 		"warp-contracts": "^1.4.45"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.0.6",
 		"@tanstack/router-devtools": "^1.120.10",
 		"@tanstack/router-plugin": "^1.120.10",
 		"@types/node": "^22.15.21",

@@ -1,50 +1,76 @@
-# React + TypeScript + Vite
+# m3ters-pay-gnosis
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A project integrating **M3tering Protocol** with **Gnosis** and **Safe** (Multi-Sig wallet).  
+Leverages smart contracts to make power purchases on the m3tering protocol.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Features](#features)
+- [Architecture / Components](#architecture--components)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Running Locally](#running-locally)
+- [Usage](#usage)
+- [Environment Variables](#environment-variables)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Features
 
-- Configure the top-level `parserOptions` property like this:
+-
+-
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Architecture / Components
+
+This repo is structured roughly as:
+
+- **public/** — static assets
+- **src/** — frontend / integration logic
+- **.env.example** — sample environment variables
+- **vite.config.ts, tsconfig** — TypeScript + Vite setup
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (≥ version compatible with your setup)
+- Yarn or npm or bun
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/michaelchristwin/m3ters-pay-gnosis.git
+cd m3ters-pay-gnosis
+
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+bun install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Configuration
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Copy .env.example to .env and populate with your credentials. For example:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+VITE_PROJECT_ID="your_project_id"
+```
+
+### Running locally
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+bun run dev
 ```
