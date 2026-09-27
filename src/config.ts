@@ -5,7 +5,7 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "@wagmi/core";
 import { gnosis } from "wagmi/chains";
-import abi from "@/ABIs/abi.json";
+import { abi } from "@/ABIs/abi.ts";
 
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
 
@@ -23,7 +23,7 @@ const connectors = connectorsForWallets(
   {
     appName: "xCharge",
     projectId: PROJECT_ID || "",
-  }
+  },
 );
 
 export const config = createConfig({
